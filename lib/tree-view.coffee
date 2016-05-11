@@ -716,6 +716,7 @@ class TreeView extends View
         repo.getPathStatus(initialPath)
         repo.getPathStatus(newPath)
 
+      ipc.send 'file-moved', {from: initialPath, to: newPath}
     catch error
       atom.notifications.addWarning("Failed to move entry #{initialPath} to #{newDirectoryPath}", detail: error.message)
 
