@@ -134,6 +134,7 @@ class TreeView extends View
      'tree-view:toggle-ignored-names': -> toggleConfig 'tree-view.hideIgnoredNames'
      'tree-view:remove-project-folder': (e) => @removeProjectFolder(e)
      'tree-view:open-selected-entry-in-browser': => @openSelectedEntryInBrowser()
+     'tree-view:import-file': => @importFile()
 
     [0..8].forEach (index) =>
       atom.commands.add @element, "tree-view:open-selected-entry-in-pane-#{index + 1}", =>
@@ -407,6 +408,9 @@ class TreeView extends View
       pathName = '/' + pathName
 
     encodeURI('file://' + pathName)
+
+  importFile: ->
+    console.log 'Import a file!'
 
   openSelectedEntrySplit: (orientation, side) ->
     selectedEntry = @selectedEntry()
