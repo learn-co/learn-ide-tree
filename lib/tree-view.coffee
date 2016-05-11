@@ -130,7 +130,7 @@ class TreeView extends View
      'tree-view:toggle-vcs-ignored-files': -> toggleConfig 'tree-view.hideVcsIgnoredFiles'
      'tree-view:toggle-ignored-names': -> toggleConfig 'tree-view.hideIgnoredNames'
      'tree-view:remove-project-folder': (e) => @removeProjectFolder(e)
-     'tree-view:open-selected-entry-in-browser': => @openSelectedEntryInBrowser
+     'tree-view:open-selected-entry-in-browser': => @openSelectedEntryInBrowser()
 
     [0..8].forEach (index) =>
       atom.commands.add @element, "tree-view:open-selected-entry-in-pane-#{index + 1}", =>
