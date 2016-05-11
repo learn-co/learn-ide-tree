@@ -410,8 +410,10 @@ class TreeView extends View
     encodeURI('file://' + pathName)
 
   importFile: ->
-    console.log 'Importing...'
-    ipc.send 'import-file'
+    selectedEntry = @selectedEntry()
+
+    if selectedEntry instanceof DirectoryView
+      ipc.send 'import-file', selectedEntry.getPath()
 
   openSelectedEntrySplit: (orientation, side) ->
     selectedEntry = @selectedEntry()
