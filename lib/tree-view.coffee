@@ -2,6 +2,7 @@ path = require 'path'
 shell = require 'shell'
 defaultBrowser = require 'x-default-browser'
 childProcess = require 'child_process'
+ipc = require 'ipc'
 
 _ = require 'underscore-plus'
 {BufferedProcess, CompositeDisposable} = require 'atom'
