@@ -390,6 +390,7 @@ class TreeView extends View
       #selectedEntry.toggleExpansion()
     else if selectedEntry instanceof FileView
       console.log 'Trying to open ' + selectedEntry.getPath()
+      shell.openExternal(selectedEntry.getPath())
       #atom.workspace.open(selectedEntry.getPath(), {activatePane})
 
   openSelectedEntrySplit: (orientation, side) ->
