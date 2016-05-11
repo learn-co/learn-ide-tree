@@ -2,6 +2,7 @@ path = require 'path'
 shell = require 'shell'
 open = require 'open'
 defaultBrowser = require 'x-default-browser'
+launcher = require 'browser-launcher2'
 
 _ = require 'underscore-plus'
 {BufferedProcess, CompositeDisposable} = require 'atom'
@@ -391,11 +392,26 @@ class TreeView extends View
     if selectedEntry instanceof FileView
       resolvedPath = @pathToFileUrl(selectedEntry.getPath())
       console.log 'Opening ' + resolvedPath + ' in browser.'
-
       defaultBrowser (err, res) ->
-        console.log res.identity
-        open resolvedPath, res.commonName
+        console.log res.commonName
+        #open resolvedPath, res.identity
+        launcher (err, launch) ->
+          launch resolvedPath, {
+            browser: res.commonName
+            detached: true
+          }, (err, instance) ->
+            if err
+              return console.error(err)
+
+            instance.process.unref()
+            instance.process.stdin.unref()
+            instance.process.stdout.unref()
+            instance.process.stderr.unref()
+            return
+          return
+
       #shell.openExternal(@pathToFileUrl(selectedEntry.getPath()))
+
 
   pathToFileUrl: (filePath) ->
     pathName = path.resolve(filePath).replace(/\\/g, '/')
