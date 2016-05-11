@@ -104,6 +104,8 @@ class TreeView extends View
     @on 'dragleave', '.entry.directory > .header', (e) => @onDragLeave(e)
     @on 'dragover', '.entry', (e) => @onDragOver(e)
     @on 'drop', '.entry', (e) => @onDrop(e)
+    @addEventListener 'drop', handleDrop
+
 
     atom.commands.add @element,
      'core:move-up': @moveUp.bind(this)
@@ -873,3 +875,7 @@ class TreeView extends View
     return false unless newDirectoryPath
 
     @moveEntry(initialPath, newDirectoryPath)
+
+  handleDrop: (e) ->
+    window.realDroppedEvent = e
+    console.log e
