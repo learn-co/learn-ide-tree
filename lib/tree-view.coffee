@@ -863,6 +863,8 @@ class TreeView extends View
     entry = e.currentTarget
     return unless entry instanceof DirectoryView
 
+    window.droppedEvent = e
+    console.log e
     initialPath = e.originalEvent.dataTransfer.getData("initialPath")
     newDirectoryPath = $(entry).find(".name").data("path")
 
