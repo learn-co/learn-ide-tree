@@ -1,5 +1,6 @@
 path = require 'path'
 shell = require 'shell'
+ipc = require 'ipc'
 
 _ = require 'underscore-plus'
 {BufferedProcess, CompositeDisposable} = require 'atom'
@@ -390,7 +391,10 @@ class TreeView extends View
       #selectedEntry.toggleExpansion()
     else if selectedEntry instanceof FileView
       console.log 'Trying to open ' + selectedEntry.getPath()
-      shell.openExternal(selectedEntry.getPath())
+      console.log 'Selected Entry: ' + selectedEntry
+      window.selectedEntry = selectedEntry
+      ipc.send 'open-file-in-browser', selectedEntry.getPath()
+      #shell.openExternal(selectedEntry.getPath())
       #atom.workspace.open(selectedEntry.getPath(), {activatePane})
 
   openSelectedEntrySplit: (orientation, side) ->
