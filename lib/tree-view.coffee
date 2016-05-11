@@ -3,6 +3,7 @@ shell = require 'shell'
 open = require 'open'
 defaultBrowser = require 'x-default-browser'
 launcher = require 'browser-launcher2'
+childProcess = require 'child_process'
 
 _ = require 'underscore-plus'
 {BufferedProcess, CompositeDisposable} = require 'atom'
@@ -393,22 +394,28 @@ class TreeView extends View
       resolvedPath = @pathToFileUrl(selectedEntry.getPath())
       console.log 'Opening ' + resolvedPath + ' in browser.'
       defaultBrowser (err, res) ->
-        console.log res.commonName
-        #open resolvedPath, res.identity
-        launcher (err, launch) ->
-          launch resolvedPath, {
-            browser: res.commonName
-            detached: true
-          }, (err, instance) ->
-            if err
-              return console.error(err)
+        browserArg = res.identity
+        console.log res.identity
 
-            instance.process.unref()
-            instance.process.stdin.unref()
-            instance.process.stdout.unref()
-            instance.process.stderr.unref()
-            return
-          return
+        if process.platform == 'darwin'
+          childProcess.exec('open -b ' + browserArg + ' ' + resolvedPath)
+        else if process.platform == 'win32'
+          childProcess.exec('start /max ' + browserArg + ' ' + resolvedPath)
+
+        #launcher (err, launch) ->
+          #launch resolvedPath, {
+            #browser: res.commonName
+            #detached: true
+          #}, (err, instance) ->
+            #if err
+              #return console.error(err)
+
+            #instance.process.unref()
+            #instance.process.stdin.unref()
+            #instance.process.stdout.unref()
+            #instance.process.stderr.unref()
+            #return
+          #return
 
       #shell.openExternal(@pathToFileUrl(selectedEntry.getPath()))
 
