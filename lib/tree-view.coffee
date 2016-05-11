@@ -393,9 +393,16 @@ class TreeView extends View
       console.log 'Trying to open ' + selectedEntry.getPath()
       console.log 'Selected Entry: ' + selectedEntry
       window.selectedEntry = selectedEntry
-      ipc.send 'open-file-in-browser', selectedEntry.getPath()
-      #shell.openExternal(selectedEntry.getPath())
+      ipc.send 'open-file-in-browser', @pathToFileUrl(selectedEntry.getPath())
+      shell.openExternal(@pathToFileUrl(selectedEntry.getPath()))
       #atom.workspace.open(selectedEntry.getPath(), {activatePane})
+
+  pathToFileUrl: (filePath) ->
+    pathName = path.resolve(filePath).replace(/\\/g, '/')
+    if pathName[0] != '/'
+      pathName = '/' + pathName
+
+    encodeURI('file://' + pathName)
 
   openSelectedEntrySplit: (orientation, side) ->
     selectedEntry = @selectedEntry()
