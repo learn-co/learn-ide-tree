@@ -393,7 +393,7 @@ class TreeView extends View
       console.log 'Opening ' + resolvedPath + ' in browser.'
 
       defaultBrowser (err, res) ->
-        console.log res.commonName
+        console.log res.identity
         open resolvedPath, res.commonName
       #shell.openExternal(@pathToFileUrl(selectedEntry.getPath()))
 
