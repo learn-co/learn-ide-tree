@@ -51,8 +51,11 @@
     {'type': 'separator'}
   ]
 
-  '.tree-view.full-menu .project-root > .header': [
+  '.tree-view.full-menu .header': [
     {'label': 'Import File', 'command': 'tree-view:import-file'}
+  ]
+
+  '.tree-view.full-menu .project-root > .header': [
     {'label': 'New File', 'command': 'tree-view:add-file'}
     {'label': 'New Folder', 'command': 'tree-view:add-folder'}
     {'type': 'separator'}
