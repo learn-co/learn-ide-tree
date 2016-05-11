@@ -104,7 +104,7 @@ class TreeView extends View
     @on 'dragleave', '.entry.directory > .header', (e) => @onDragLeave(e)
     @on 'dragover', '.entry', (e) => @onDragOver(e)
     @on 'drop', '.entry', (e) => @onDrop(e)
-    @addEventListener 'drop', handleDrop
+    @addEventListener 'drop', @handleDrop
 
 
     atom.commands.add @element,
