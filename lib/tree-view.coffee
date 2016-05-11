@@ -3,7 +3,6 @@ shell = require 'shell'
 defaultBrowser = require 'x-default-browser'
 childProcess = require 'child_process'
 ipc = require 'ipc'
-electronDialog = require 'dialog'
 
 _ = require 'underscore-plus'
 {BufferedProcess, CompositeDisposable} = require 'atom'
@@ -412,11 +411,7 @@ class TreeView extends View
 
   importFile: ->
     console.log 'Importing...'
-    electronDialog.showOpenDialog
-      title: 'Import File'
-      properties: ['openFile']
-    , (paths) ->
-      console.log paths
+    ipc.send 'import-file'
 
   openSelectedEntrySplit: (orientation, side) ->
     selectedEntry = @selectedEntry()
