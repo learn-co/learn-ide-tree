@@ -396,9 +396,14 @@ class TreeView extends View
       defaultBrowser (err, res) ->
         console.log 'Browser detection result'
         console.log res
+
         if err
           console.log 'Browser detection error'
           console.log err
+
+          if process.platform == 'win32'
+            res =
+              commonName: 'chrome'
 
         browserArg = if process.platform == 'win32' then res.commonName + '.exe' else res.identity
         console.log res.identity
