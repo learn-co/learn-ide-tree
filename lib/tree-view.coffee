@@ -394,6 +394,12 @@ class TreeView extends View
       resolvedPath = @pathToFileUrl(selectedEntry.getPath())
       console.log 'Opening ' + resolvedPath + ' in browser.'
       defaultBrowser (err, res) ->
+        console.log 'Browser detection result'
+        console.log res
+        if err
+          console.log 'Browser detection error'
+          console.log err
+
         browserArg = if process.platform == 'win32' then res.commonName + '.exe' else res.identity
         console.log res.identity
 
