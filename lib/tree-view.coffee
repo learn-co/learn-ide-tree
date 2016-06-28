@@ -737,7 +737,15 @@ class TreeView extends View
 
       ipc.send 'file-moved', {from: initialPath, to: newPath}
     catch error
-      atom.notifications.addWarning("Failed to move entry #{initialPath} to #{newDirectoryPath}", detail: error.message)
+      if error.message.match("ENOENT: no such file or directory, rename ''")
+        atom.notifications.addWarning(
+          "Sorry—the Learn IDE doesn't support this just yet.",
+          detail: "To add an existing file, please right-click the folder you
+                  are adding it to, and select 'Import File'"
+          dismissable: true
+        )
+      else
+        atom.notifications.addWarning("Failed to move entry #{initialPath} to #{newDirectoryPath}", detail: error.message)
 
   onStylesheetsChanged: =>
     return unless @isVisible()
