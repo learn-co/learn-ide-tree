@@ -735,7 +735,6 @@ class TreeView extends View
         repo.getPathStatus(initialPath)
         repo.getPathStatus(newPath)
 
-      ipc.send 'file-moved', {from: initialPath, to: newPath}
     catch error
       if error.message.match("ENOENT: no such file or directory, rename ''")
         atom.notifications.addInfo(

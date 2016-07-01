@@ -41,8 +41,6 @@ class MoveDialog extends Dialog
         repo.getPathStatus(@initialPath)
         repo.getPathStatus(newPath)
       @close()
-
-      ipc.send 'file-moved', {from: @initialPath, to: newPath}
     catch error
       @showError("#{error.message}.")
 
