@@ -1,12 +1,13 @@
 {CompositeDisposable} = require 'event-kit'
 path = require 'path'
-
+Interceptor = require '../nsync/fs-interceptor'
 FileIcons = require './file-icons'
 
 module.exports =
   treeView: null
 
   activate: (@state) ->
+    global.fs = new Interceptor()
     @disposables = new CompositeDisposable
     @state.attached ?= true if @shouldAttach()
 
@@ -26,6 +27,7 @@ module.exports =
     })
 
   deactivate: ->
+    fs = undefined
     @disposables.dispose()
     @fileIconsDisposable?.dispose()
     @treeView?.deactivate()

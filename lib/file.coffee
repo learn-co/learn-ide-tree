@@ -1,5 +1,4 @@
 path = require 'path'
-fs = require 'fs-plus'
 {CompositeDisposable, Emitter} = require 'event-kit'
 {repoForPath} = require './helpers'
 
