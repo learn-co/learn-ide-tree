@@ -1,5 +1,7 @@
 {CompositeDisposable} = require 'event-kit'
 path = require 'path'
+nsync = require '../nsync/nsync'
+RemoteFileSystem = require '../nsync/remote-file-system'
 
 FileIcons = require './file-icons'
 
@@ -7,6 +9,7 @@ module.exports =
   treeView: null
 
   activate: (@state) ->
+    nsync.activate(new RemoteFileSystem())
     @disposables = new CompositeDisposable
     @state.attached ?= true if @shouldAttach()
 
@@ -26,6 +29,7 @@ module.exports =
     })
 
   deactivate: ->
+    nsync.deactivate()
     @disposables.dispose()
     @fileIconsDisposable?.dispose()
     @treeView?.deactivate()
