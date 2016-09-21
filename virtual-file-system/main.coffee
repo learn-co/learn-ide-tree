@@ -64,28 +64,23 @@ class VirtualFileSystem
       change: @onRecievedChange
       rescue: @onRecievedRescue
 
-    @websocket = new WebSocket "#{WS_SERVER_URL}?token=#{@atomHelper.token()}"
+    @websocket = new SingleSocket "#{WS_SERVER_URL}?token=#{@atomHelper.token()}",
+      onopen: =>
+        @send {command: 'init'}
+      onmessage: (message) =>
+        fs.appendFileSync(@receivedLog, "\n#{new Date}: #{message}")
 
-    @websocket.onopen = =>
-      @send {command: 'init'}
+        try
+          {type, data} = JSON.parse(message)
+          console.log 'RECEIVED:', type
+        catch err
+          console.log 'ERROR PARSING MESSAGE:', message, err
 
-    @websocket.onmessage = (event) =>
-      message = event.data
-      fs.appendFileSync(@receivedLog, "\n#{new Date}: #{message}")
-
-      try
-        {type, data} = JSON.parse(message)
-        console.log 'RECEIVED:', type
-      catch err
-        console.log 'ERROR PARSING MESSAGE:', message, err
-
-      messageCallbacks[type]?(data)
-
-    @websocket.onerror = (err) ->
-      console.error 'ERROR:', err
-
-    @websocket.onclose = (event) ->
-      console.log 'CLOSED:', event
+        messageCallbacks[type]?(data)
+      onerror: (err) ->
+        console.error 'ERROR:', err
+      onclose: (event) ->
+        console.log 'CLOSED:', event
 
   addOpener: ->
     @atomHelper.addOpener (uri) =>
@@ -96,7 +91,9 @@ class VirtualFileSystem
     @projectNode.serialize()
 
   activate: (@activationState) ->
-    @projectNode = new FileSystemNode(@activationState.virtualProject)
+    # TODO: need to handle undefined obj on first start up
+    virtualProject = @activationState.virtualProject || {}
+    @projectNode = new FileSystemNode(virtualProject)
 
     if not @projectNode.path?
       return @atomHelper.loading()
