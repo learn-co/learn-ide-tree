@@ -9,25 +9,31 @@ module.exports =
   treeView: null
 
   activate: (@state) ->
-    virtualFileSystem.activate(@state)
+    treeViewIsDisabled = localStorage.disableTreeView == 'true'
 
-    @disposables = new CompositeDisposable
-    @state.attached ?= true if @shouldAttach()
+    if !treeViewIsDisabled
+      virtualFileSystem.activate(@state)
 
-    @createView() if @state.attached
+      @disposables = new CompositeDisposable
+      @state.attached ?= true if @shouldAttach()
 
-    @disposables.add atom.commands.add('atom-workspace', {
-      'tree-view:show': => @createView().show()
-      'tree-view:toggle': => @createView().toggle()
-      'tree-view:toggle-focus': => @createView().toggleFocus()
-      'tree-view:reveal-active-file': => @createView().revealActiveFile()
-      'tree-view:toggle-side': => @createView().toggleSide()
-      'tree-view:add-file': => @createView().add(true)
-      'tree-view:add-folder': => @createView().add(false)
-      'tree-view:duplicate': => @createView().copySelectedEntry()
-      'tree-view:remove': => @createView().removeSelectedEntries()
-      'tree-view:rename': => @createView().moveSelectedEntry()
-    })
+      @createView() if @state.attached
+
+      @disposables.add atom.commands.add('atom-workspace', {
+        'tree-view:show': => @createView().show()
+        'tree-view:toggle': => @createView().toggle()
+        'tree-view:toggle-focus': => @createView().toggleFocus()
+        'tree-view:reveal-active-file': => @createView().revealActiveFile()
+        'tree-view:toggle-side': => @createView().toggleSide()
+        'tree-view:add-file': => @createView().add(true)
+        'tree-view:add-folder': => @createView().add(false)
+        'tree-view:duplicate': => @createView().copySelectedEntry()
+        'tree-view:remove': => @createView().removeSelectedEntries()
+        'tree-view:rename': => @createView().moveSelectedEntry()
+      })
+
+    if treeViewIsDisabled
+      delete localStorage.disableTreeView
 
   deactivate: ->
     @disposables.dispose()
