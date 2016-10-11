@@ -98,6 +98,9 @@ onFindAndReplace = (path) ->
     nsync.save(path, content)
 
 module.exports = helper = (activationState) ->
+  nsync.addFetchFilter (path) ->
+    atomHelper.saveEditor(path)
+
   disposables = new CompositeDisposable
 
   disposables.add atomHelper.addCommands

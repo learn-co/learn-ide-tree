@@ -125,6 +125,21 @@ module.exports = helper =
   saveEditor: (path) ->
     textEditor = @findTextEditorByPath(path)
 
+    return false unless textEditor?
+
+    if not textEditor.isModified()
+      false
+    else
+      node = nsync.getNode(path)
+      if node.digest is digest(textEditor.getText())
+        textEditor.save()
+        true
+      else
+        false
+
+  saveEditorREMOVE: (path) ->
+    textEditor = @findTextEditorByPath(path)
+
     return unless textEditor? and textEditor.isModified()
 
     node = nsync.getNode(path)
