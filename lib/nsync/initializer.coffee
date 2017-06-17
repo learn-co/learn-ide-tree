@@ -25,7 +25,7 @@ WS_SERVER_URL = (->
   ,
     host: 'ile.learn.co',
     port: 443,
-    path: 'fs_server'
+    path: 'environment'
 
   {host, port, path} = config
   protocol = if port is 443 then 'wss' else 'ws'
@@ -204,6 +204,7 @@ module.exports = helper = (activationState) ->
         localRoot: _path.join(atom.configDirPath, '.learn-ide')
         connection:
           url: "#{WS_SERVER_URL}?token=#{token}&version=#{atomHelper.learnIdeVersion()}"
+          socketKey: 'environment'
 
   atomHelper.waitForTerminalConnection().then(connect).catch(connect)
 
