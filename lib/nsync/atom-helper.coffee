@@ -42,8 +42,6 @@ module.exports = helper =
   loading: ->
     @loadingNotification =
       @info 'Learn IDE: loading your remote code...',
-        detail: """This may take a moment, but will only happen
-                very occasionally (maybe just once)"""
         dismissable: true
 
   open: (path) ->
@@ -100,10 +98,6 @@ module.exports = helper =
       token.observe (value) ->
         if value?
           resolve(value)
-
-  waitForTerminalConnection: ->
-    pkg = atom.packages.loadPackage(primaryLearnIDEPackage)
-    pkg.mainModule.waitForTerminalConnection()
 
   learnIdeVersion: ->
     if not LEARN_IDE_VERSION?
