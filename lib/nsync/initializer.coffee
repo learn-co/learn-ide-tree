@@ -9,30 +9,6 @@ executeCustomCommand = require './custom-commands'
 {name} = require '../../package.json'
 {CompositeDisposable} = require 'event-kit'
 
-require('dotenv').config
-  path: _path.join(__dirname, '..', '..', '.env')
-  silent: true
-
-require('dotenv').config
-  path: _path.join(atom.getConfigDirPath(), '.env')
-  silent: true
-
-WS_SERVER_URL = (->
-  config = _.defaults
-    host: process.env['IDE_WS_HOST']
-    port: process.env['IDE_WS_PORT']
-    path: process.env['IDE_WS_FS_PATH']
-  ,
-    host: 'ile.learn.co',
-    port: 443,
-    path: 'environment'
-
-  {host, port, path} = config
-  protocol = if port is 443 then 'wss' else 'ws'
-
-  "#{protocol}://#{host}:#{port}/#{path}"
-)()
-
 convertEOL = (text) ->
   text.replace(/\r\n|\n|\r/g, '\n')
 
@@ -197,16 +173,11 @@ module.exports = helper = (activationState) ->
 
   disposables.forEach (disposable) -> composite.add(disposable)
 
-  connect = ->
-    atomHelper.getToken().then (token) ->
-      nsync.configure
-        expansionState: activationState.directoryExpansionStates
-        localRoot: _path.join(atom.configDirPath, '.learn-ide')
-        connection:
-          url: "#{WS_SERVER_URL}?token=#{token}&version=#{atomHelper.learnIdeVersion()}"
-          socketKey: 'environment'
-
-  atomHelper.waitForTerminalConnection().then(connect).catch(connect)
+  atom.emitter.on 'learn-ide:did-join-channel', (channel) ->
+    nsync.configure
+      expansionState: activationState.directoryExpansionStates
+      localRoot: _path.join(atom.configDirPath, '.learn-ide')
+      channel: channel
 
   return composite
 
