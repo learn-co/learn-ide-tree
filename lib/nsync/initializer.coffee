@@ -94,7 +94,6 @@ waitForFile = (localPath, seconds) ->
 
 onResetConnection = ->
   atomHelper.onResetConnection()
-  nsync.resetConnection()
 
 module.exports = helper = (activationState) ->
   composite = new CompositeDisposable
@@ -169,15 +168,20 @@ module.exports = helper = (activationState) ->
 
         composite.add resultModel.onDidReplacePath ({filePath}) ->
           onFindAndReplace(filePath)
+
+    atom.emitter.on 'learn-ide:did-join-channel', (channel) ->
+      nsync.configure
+        expansionState: activationState.directoryExpansionStates
+        localRoot: _path.join(atom.configDirPath, '.learn-ide')
+        channel: channel
+
+    atom.emitter.on 'learn-ide:error-joining-channel', ->
+      atomHelper.disconnected()
+
   ]
 
   disposables.forEach (disposable) -> composite.add(disposable)
 
-  atom.emitter.on 'learn-ide:did-join-channel', (channel) ->
-    nsync.configure
-      expansionState: activationState.directoryExpansionStates
-      localRoot: _path.join(atom.configDirPath, '.learn-ide')
-      channel: channel
 
   return composite
 
