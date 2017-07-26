@@ -116,7 +116,7 @@ module.exports = helper =
     if not @disconnectedNotification?
       @disconnectedNotification =
         @warn 'Learn IDE: you are not connected!',
-          detail: 'The connection with the remote server has been lost.'
+          detail: 'The connection with the remote server failed.'
           buttons: [
             text: 'Reconnect'
             onDidClick: @resetConnection
