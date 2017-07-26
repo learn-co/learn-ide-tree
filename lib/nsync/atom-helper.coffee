@@ -132,14 +132,9 @@ module.exports = helper =
       @disconnectedNotification.dismiss()
       @disconnectedNotification = null
 
-    if not @reconnectNotification?
-      @reconnectNotification =
-        @warn 'Learn IDE: attempting to reconnect...',
-          buttons: [
-            text: 'Try again'
-            onDidClick: @resetConnection
-          ]
-          dismissable: true
+    @reconnectNotification =
+      @warn 'Learn IDE: attempting to reconnect...',
+        dismissable: true
 
   connected: ->
     @disconnectedNotification?.dismiss()
