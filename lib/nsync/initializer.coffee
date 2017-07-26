@@ -162,8 +162,6 @@ module.exports = helper = (activationState) ->
 
     atomHelper.on 'learn-ide:logout', ->
       pkg = atom.packages.loadPackage(name)
-      pkg.mainModule.preventCache = true
-      nsync.flushCache()
 
     atomHelper.onDidActivatePackage (pkg) ->
       if pkg.name is 'find-and-replace'
