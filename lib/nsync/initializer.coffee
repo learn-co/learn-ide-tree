@@ -175,9 +175,8 @@ module.exports = helper = (activationState) ->
         localRoot: _path.join(atom.configDirPath, '.learn-ide')
         channel: channel
 
-    atom.emitter.on 'learn-ide:error-joining-channel', ->
+    atom.emitter.on 'learn-ide:connection-error', ->
       atomHelper.disconnected()
-
   ]
 
   disposables.forEach (disposable) -> composite.add(disposable)
