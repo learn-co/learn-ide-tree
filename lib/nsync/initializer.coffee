@@ -12,6 +12,8 @@ executeCustomCommand = require './custom-commands'
 convertEOL = (text) ->
   text.replace(/\r\n|\n|\r/g, '\n')
 
+didAddOpener = false
+
 unimplemented = ({type}) ->
   command = type.replace(/^learn-ide:/, '').replace(/-/g, ' ')
   atomHelper.warn 'Learn IDE: coming soon!', {detail: "Sorry, '#{command}' isn't available yet."}
@@ -110,12 +112,14 @@ module.exports = helper = (activationState) ->
       'learn-ide-tree:refresh': onRefresh
 
     nsync.onDidConfigure ->
-      atomHelper.addOpener (uri) ->
-        fs.stat uri, (err, stats) ->
-          if err? and nsync.hasPath(uri)
-            atomHelper.loadingFile(uri)
-            nsync.open(uri)
-            waitForFile(uri, 1)
+      if not didAddOpener
+        didAddOpener = true
+        atomHelper.addOpener (uri) ->
+          fs.stat uri, (err, stats) ->
+            if err? and nsync.hasPath(uri)
+              atomHelper.loadingFile(uri)
+              nsync.open(uri)
+              waitForFile(uri, 1)
 
     nsync.onDidOpen ({localPath}) ->
       atomHelper.resolveOpen(localPath)
@@ -169,7 +173,7 @@ module.exports = helper = (activationState) ->
         composite.add resultModel.onDidReplacePath ({filePath}) ->
           onFindAndReplace(filePath)
 
-    atom.emitter.on 'learn-ide:did-join-channel', (channel) ->
+    atom.emitter.on 'learn-ide:connection-open', (channel) ->
       nsync.configure
         expansionState: activationState.directoryExpansionStates
         localRoot: _path.join(atom.configDirPath, '.learn-ide')
